@@ -1,0 +1,17 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: sample-worker
+  namespace: default
+spec:
+  restartPolicy: Never
+  containers:
+    - name: sample-worker
+      image: payaljain/sample-worker:1
+      volumeMounts:
+      - name: shareddata
+        mountPath: /shareddata
+  volumes:
+  - name: shareddata
+    hostPath:
+      path: /tmp/shareddata

@@ -1,0 +1,35 @@
+kind: DaemonSet
+apiVersion: apps/v1
+metadata:
+  name: filesystem-hydrator
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: filesystem-hydrator
+  template:
+    metadata:
+      labels:
+        app: filesystem-hydrator
+    spec:
+      containers:
+        - name: filesystem-hydrator
+          image: payaljain/daemonset-hydrator:1.5
+          env:
+            - name: BUCKETNAME
+              valueFrom:
+                configMapKeyRef: 
+                  name: daemonset-hydrator
+                  key: bucketName
+          volumeMounts:
+          - name: shareddata
+            mountPath: /shareddata
+          - name: keys
+            mountPath: /key
+      volumes:
+      - name: shareddata
+        hostPath:
+          path: /tmp/shareddata
+      - name: keys
+        secret: 
+          secretName: filesystem-hydrator-sa-key
